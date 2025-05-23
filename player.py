@@ -1,79 +1,81 @@
 import json
 import random
 
-RACES = [
-    "Human",
-    "Elf",
-    "Magicborn",
-    "Dwarf",
-    "Ogre",
-    "Fairy",
-    "Gnome",
-    "Jew",
-    "Dragonborn",
-    "Demon",
-    "Goblin",
-    "Minotaur"
-]
+# TODO
 
-CLASSES = [
-    "Healer",
-    "Warrior",
-    "Mage",
-    "Herbalist",
-    "Archer",
-    "Rouge",
-    "Paladin",
-    "Bard",
-    "Monk",
-    "Bum",
-    "Midget",
-    "Druid",
-    "Necromancer"
-]
+# RACES = [
+#     "Human",
+#     "Elf",
+#     "Magicborn",
+#     "Dwarf",
+#     "Ogre",
+#     "Fairy",
+#     "Gnome",
+#     "Jew",
+#     "Dragonborn",
+#     "Demon",
+#     "Goblin",
+#     "Minotaur"
+# ]
+
+# CLASSES = [
+#     "Healer",
+#     "Warrior",
+#     "Mage",
+#     "Herbalist",
+#     "Archer",
+#     "Rouge",
+#     "Paladin",
+#     "Bard",
+#     "Monk",
+#     "Bum",
+#     "Midget",
+#     "Druid",
+#     "Necromancer"
+# ]
 
 class Player:
     def __init__(self):
-        self.name = random.choice([
-            "Zilun",
-            "Rehlu"
-            "Rhusan",
-            "Neiho",
-            "Brirver",
-            "Havengloom",
-            "Mangark",
-            "Longkiller",
-            "Midren",
-            "Butsk",
-            "Fir",
-            "Valursk",
-            "Gognon",
-            "Stillmark",
-            "Mar",
-            "Peacetrack",
-            "Lezuezath",
-            "Vizeltuek",
-            "Kem",
-            "Zah",
-            "Sunkhim",
-            "Zilmolder",
-            "Tradzatrentu",
-            "Mauzac",
-            "Vemoro",
-            "Tim",
-            "Kiam",
-            "Zuw",
-            "Pu",
-            "Crieleres",
-            "Rildocis",
-            "Vorfer",
-            "Dedristu",
-        ])
+        # self.name = random.choice([
+        #     "Zilun",
+        #     "Rehlu"
+        #     "Rhusan",
+        #     "Neiho",
+        #     "Brirver",
+        #     "Havengloom",
+        #     "Mangark",
+        #     "Longkiller",
+        #     "Midren",
+        #     "Butsk",
+        #     "Fir",
+        #     "Valursk",
+        #     "Gognon",
+        #     "Stillmark",
+        #     "Mar",
+        #     "Peacetrack",
+        #     "Lezuezath",
+        #     "Vizeltuek",
+        #     "Kem",
+        #     "Zah",
+        #     "Sunkhim",
+        #     "Zilmolder",
+        #     "Tradzatrentu",
+        #     "Mauzac",
+        #     "Vemoro",
+        #     "Tim",
+        #     "Kiam",
+        #     "Zuw",
+        #     "Pu",
+        #     "Crieleres",
+        #     "Rildocis",
+        #     "Vorfer",
+        #     "Dedristu",
+        # ])
 
-        self.race = "Elf"
-        self.class_ = "Mage"
+        # self.race = "Elf"
+        # self.class_ = "Mage"
 
-        # self.name = input("Name > ")
+        self.name = input("Name > ")
         
         # print("Races: " + ", ".join(RACES))
         # self.race = None
