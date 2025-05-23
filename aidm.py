@@ -74,7 +74,7 @@ class AIDM:
                     for some_player_name in self.players:
                         if self.players[some_player_name].hp <= 0:
                             self.cmd_say(f"{some_player_name} died")
-                            self.players.remove(some_player_name)
+                            self.players.pop(some_player_name)
 
                     self.conversation.extend(self.context)
                     self.conversation.append("___")
