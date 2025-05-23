@@ -9,11 +9,9 @@ from ollama import Ollama, simple_ollama_query
 
 class RoomType(Enum):
     START = "Start"
-    EMPTY = "Empty"
     ENEMY = "Enemy"
     NPC = "NPC"
     TREASURE = "Treasure"
-    BOSS = "Boss"
     EXIT = "Exit"
 
 @dataclass
