@@ -1,87 +1,115 @@
 import json
+import random
+import re
+from typing import Dict, List, Optional, Set
+from dataclasses import dataclass, field, asdict
+from enum import Enum
 
-from ollama import Ollama
+from ollama import Ollama, simple_ollama_query
 
-ollama = Ollama("dungeon-generator")
+class RoomType(Enum):
+    START = "Start"
+    EMPTY = "Empty"
+    ENEMY = "Enemy"
+    NPC = "NPC"
+    TREASURE = "Treasure"
+    BOSS = "Boss"
+    EXIT = "Exit"
 
-def parse_first_valid_json(text):
-    text = "".join(text)
-    print("parse_first_valid_json", text)
-    depth = 0
-    result = []
-    for i, char in enumerate(text):
-        result.append(char)
-        if char == '{':
-            depth += 1
-        elif char == '}':
-            depth -= 1
-            if depth == 0:
-                try:
-                    return json.loads(''.join(result))
-                except json.JSONDecodeError:
-                    break
-    raise ValueError("No valid JSON object found")
+@dataclass
+class NPC:
+    name: str
+    
+    def to_dict(self):
+        return asdict(self)
+
+@dataclass
+class Enemy:
+    name: str
+    hp: int
+    
+    def to_dict(self):
+        return asdict(self)
+
+@dataclass
+class Loot:
+    name: str
+    amount: int = 1
+    
+    def to_dict(self):
+        return asdict(self)
+
+BOILERPLATE = "do not provide any additional text, comments or explanation, no quotemarks or any other indentation whatsoever"
 
 class Room:
-    def __init__(self, x, y, z, name):
-        self.position = (x, y, z)
-        self.name = name
-        self.connections = {
-            "north": None,
-            "east": None,
-            "south": None,
-            "west": None,
-            "up": None,
-            "down": None
-        }
-        self.enemies = []
-        self.npcs = []
-        self.loot = []
-        self.visited = False
-
-    def get_data(self):
-        while True:
-            res = ollama.generate(f"\"{self.name}\"")
-            try:
-                data = parse_first_valid_json(res)
-                if data is None:
-                    raise ValueError("data is None")
-                return data
-            except:
-                print("Retrying room generation")
-                continue
-
-    def visit(self):
-        if self.visited:
-            return
-
-        self.visited = True
+    def __init__(self, room_type: RoomType, floor_num: int):
+        self.room_type = room_type
+        self.name: Optional[str] = None
+        self.connections: Dict[str, Room] = {}
+        self.enemies: List[Enemy] = []
+        self.npcs: List[NPC] = []
+        self.loot: List[Loot] = []
+        self.floor_num = floor_num
         
-        data = self.get_data()
+        self._initialize_content()
 
-        print("Room.get_data() = ", data)
-
-        if data:
-            if data["connections"]:
-                for direction in data["connections"]:
-                    self.connections[direction] = data["connections"][direction] or None
-            if data["enemies"]:
-                self.enemies = data["enemies"] or []
-            if data["npcs"]:
-                self.npcs = data["npcs"] or []
-            if data["loot"]:
-                self.loot = data["loot"] or []
+    def spawn_enemy(self, name = None, hp = 0):
+        prompt = f"Generate an enemy name for an RPG, {BOILERPLATE}: "
+        name = name or simple_ollama_query("llama3.2", prompt)
+        hp = hp or int(re.findall(r'\d+', simple_ollama_query("llama3.2", f"On a scale from 10 to {100 + 100 * self.floor_num}, what do you think is the appropriate health of an enmy called '{name}' in an RPG, {BOILERPLATE}"))[0])
+        self.enemies.append(Enemy(name, hp))
+    
+    def _initialize_content(self):
+        if self.room_type == RoomType.ENEMY:
+            num_enemies = random.randint(1, 3)
+            for _ in range(num_enemies):
+                self.spawn_enemy()
+        elif self.room_type == RoomType.NPC:
+            prompt = f"Generate a name for an NPC in an RPG, {BOILERPLATE}: "
+            name = simple_ollama_query("llama3.2", prompt)
+            self.npcs.append(NPC(name))
+        elif self.room_type == RoomType.TREASURE or self.room_type == RoomType.START:
+            max_loot = 5
+            if self.room_type == RoomType.START:
+                max_loot *= 2
+            num_loot = random.randint(2, max_loot)
+            for _ in range(num_loot):
+                prompt = f"Generate a name for SINGULAR, RANDOM dungeon loot (e.g. {random.choice([
+                    "weapon",
+                    "spell tome",
+                    "magic staff",
+                    "scroll",
+                    "potion",
+                    "food",
+                    "grenade",
+                    "bomb",
+                    "herbs",
+                    "enchants"
+                ])}) in an RPG, {BOILERPLATE}: "
+                name = simple_ollama_query("llama3.2", prompt)
+                self.loot.append(Loot(name, random.randint(1, 5)))
+        
+        content_desc = []
+        if self.enemies:
+            content_desc.append(f"enemies: {[e.name for e in self.enemies]}")
+        if self.npcs:
+            content_desc.append(f"npcs: {[n.name for n in self.npcs]}")
+        if self.loot:
+            content_desc.append(f"loot: {[l.name for l in self.loot]}")
+        
+        prompt = (f"Generate a creative name for a dungeon room containing "
+                    f"{', '.join(content_desc)}, {BOILERPLATE}: ")
+        self.name = "".join(Ollama("llama3.2").generate(prompt))
+    
+    def to_dict(self):
+        return {
+            "name": self.name,
+            # "type": self.room_type.value,
+            "connections": {dir: room.name for dir, room in self.connections.items()},
+            "enemies": [enemy.to_dict() for enemy in self.enemies],
+            "npcs": [npc.to_dict() for npc in self.npcs],
+            "loot": [loot.to_dict() for loot in self.loot]
+        }
 
     def json(self):
-        connections = {}
-        for direction in self.connections:
-            if self.connections[direction]:
-                connections[direction] = self.connections[direction]
-
-        return json.dumps({
-            "name": self.name,
-            "connections": connections,
-            "enemies": self.enemies,
-            "npcs": self.npcs,
-            "loot": self.loot
-        })
+        return json.dumps(self.to_dict())

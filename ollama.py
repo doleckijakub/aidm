@@ -2,7 +2,8 @@ import requests
 import json
 import threading
 
-OLLAMA_HOST = "127.0.0.1:11434"
+# OLLAMA_HOST = "127.0.0.1:11434"
+OLLAMA_HOST = "ollama.doleckijakub.pl"
 
 class Ollama:
     def __init__(self, model):
@@ -12,13 +13,12 @@ class Ollama:
         self._stop_event = threading.Event()
 
     def stop(self):
-        """Stop the request if it's in progress."""
         self._stop_event.set()
         if self._response is not None:
             self._response.close()
 
     def generate(self, prompt: str):
-        print(self, "generate() called with prompt length", len(prompt))
+        # print(self, "generate() called with prompt length", len(prompt))
 
         self._stop_event.clear()
 
@@ -51,3 +51,6 @@ class Ollama:
 
         if not self._stop_event.is_set() and line_buffer.strip():
             yield line_buffer.strip()
+
+def simple_ollama_query(model: str, prompt: str):
+    return "".join(Ollama(model).generate(prompt))

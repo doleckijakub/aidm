@@ -1,4 +1,5 @@
 import json
+import random
 
 RACES = [
     "Human",
@@ -33,7 +34,42 @@ CLASSES = [
 
 class Player:
     def __init__(self):
-        self.name = "Jacob"
+        self.name = random.choice([
+            "Zilun",
+            "Rehlu"
+            "Rhusan",
+            "Neiho",
+            "Brirver",
+            "Havengloom",
+            "Mangark",
+            "Longkiller",
+            "Midren",
+            "Butsk",
+            "Fir",
+            "Valursk",
+            "Gognon",
+            "Stillmark",
+            "Mar",
+            "Peacetrack",
+            "Lezuezath",
+            "Vizeltuek",
+            "Kem",
+            "Zah",
+            "Sunkhim",
+            "Zilmolder",
+            "Tradzatrentu",
+            "Mauzac",
+            "Vemoro",
+            "Tim",
+            "Kiam",
+            "Zuw",
+            "Pu",
+            "Crieleres",
+            "Rildocis",
+            "Vorfer",
+            "Dedristu",
+        ])
+
         self.race = "Elf"
         self.class_ = "Mage"
 
@@ -50,7 +86,7 @@ class Player:
         #     self.class_ = input("Class > ")
         
         self.position = (0, 0, 0)
-
+        self.hp = 100
         self.inventory = dict()
 
     def desc(self):
