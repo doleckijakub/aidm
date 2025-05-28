@@ -185,7 +185,23 @@ Server: Alpha.hp = 0
 AIDM: say("Your wounds are too much to bear. Everything goes black...")
 ___
 
+Jakub: I pick everything up
+AIDM: room("Jakub")
+Server: Jakub is currently in a room called 'Shattered Relic Assembly'. Exits are: 'The Caverns of Eternal Requiem' to the west, 'The Room of Unpredictable Riches' to the east, 'The Crypt of Forgotten Riches' to the north, 'The Crypt of Unrelenting Dominance' to the south. There are no enemies here. You see no NPCs around. Loot on the ground: 2x 'Mysterious Artifact Fragment', 5x 'Maledicta', 2x 'Chaos Shard', 4x 'Locus Fragment', 3x 'Dungeon Scrap'.
+AIDM: say("You pick up:")
+AIDM: pickup("Jakub", "Mysterious Artifact Fragment", 2)
+AIDM: say(" - 2x Mysterious Artifact Fragment")
+AIDM: pickup("Jakub", "Maledicta", 5)
+AIDM: say(" - 5x Maledicta")
+AIDM: pickup("Jakub", "Chaos Shard", 2)
+AIDM: say(" - 2x Chaos Shard")
+AIDM: pickup("Jakub", "Locus Fragment", 4)
+AIDM: say(" - 4x Locus Fragment")
+AIDM: pickup("Jakub", "Dungeon Scrap", 3)
+AIDM: say(" - 3x Dungeon Scrap")
+___
+
 """
 
 PARAMETER stop "___"
-PARAMETER temperature 0.7
+PARAMETER temperature 0.5

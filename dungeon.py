@@ -68,11 +68,16 @@ class Dungeon:
                 
                 if new_pos not in floor_rooms:
                     room_type = random.choices(
-                        [RoomType.EMPTY, RoomType.ENEMY, RoomType.NPC, RoomType.TREASURE],
-                        weights=[0 + floor_num*0.02,
+                        [
+                            RoomType.ENEMY,
+                            RoomType.NPC,
+                            RoomType.TREASURE
+                        ],
+                        weights = [
                                 0.4 + floor_num*0.03,
                                 0.2 - floor_num*0.01,
-                                1 - floor_num*0.05]
+                                1 - floor_num*0.05
+                        ]
                     )[0]
                     
                     new_room = Room(room_type, floor_num)
