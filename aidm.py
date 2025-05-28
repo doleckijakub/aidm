@@ -61,26 +61,27 @@ class AIDM:
 
     def run(self):
         while True:
-            for player_name in self.players:
-                r = True
-                while r:
-                    self.print_sayer(player_name)
-                    prompt = input()
-                    if prompt[0] == "!":
-                        SafeExecutor(context = { "self": self }).safe_exec(prompt[1:])
-                    else:
-                        r = self.handle_player_prompt(player_name, prompt)
-                    
-                    for some_player_name in self.players:
-                        if self.players[some_player_name].hp <= 0:
-                            self.cmd_say(f"{some_player_name} died")
-                            self.players.remove(some_player_name)
+            if self.players:
+                for player_name in self.players:
+                    r = True
+                    while r:
+                        self.print_sayer(player_name)
+                        prompt = input()
+                        if prompt[0] == "!":
+                            SafeExecutor(context = { "self": self }).safe_exec(prompt[1:])
+                        else:
+                            r = self.handle_player_prompt(player_name, prompt)
+                        
+                        for some_player_name in self.players:
+                            if self.players[some_player_name].hp <= 0:
+                                self.cmd_say(f"{some_player_name} died")
+                                self.players.remove(some_player_name)
 
-                    self.conversation.extend(self.context)
-                    self.conversation.append("___")
+                        self.conversation.extend(self.context)
+                        self.conversation.append("___")
 
-                    with open(LOGFILE, "w") as f:
-                        f.write("\n".join(self.conversation))
+                        with open(LOGFILE, "w") as f:
+                            f.write("\n".join(self.conversation))
             else:
                 self.cmd_say("Everyone died. GG")
                 return
